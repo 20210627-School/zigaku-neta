@@ -3,363 +3,84 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>📚 自学ネタ </title>
+<title>自学ネタ</title>
 <style>
-  :root{
-    --bg:#fffef8; --card:#fff; --accent:#2962ff; --muted:#666;
-    --accent-2:#00bfa5;
-  }
-  body{font-family:"Noto Sans JP",system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);margin:0;color:#222;}
-  header{background:#ffd54f;padding:14px 18px;font-weight:800;border-bottom:4px solid rgba(0,0,0,0.04);}
-  .container{max-width:1200px;margin:18px auto;padding:0 16px;}
-  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;}
-  .controls label{font-weight:700;margin-right:6px;}
+  body{font-family:"Noto Sans JP",sans-serif;margin:0;background:#fffef8;color:#222;}
+  header{background:#ffd54f;padding:14px 16px;font-weight:800;border-bottom:1px solid rgba(0,0,0,0.06);}
+  .container{max-width:1100px;margin:18px auto;padding:0 16px;}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0;}
+  label{font-weight:700;margin-right:6px;}
   select,input,button{padding:8px;border-radius:8px;border:1px solid #ddd;font-size:0.95rem;}
-  button{background:var(--accent);color:#fff;border:none;cursor:pointer;font-weight:700;}
-  .meta{margin-left:auto;color:var(--muted);font-size:0.95rem;}
-  .list-wrap{background:transparent;margin-top:8px;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;}
-  .card{background:var(--card);padding:10px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.04);line-height:1.4;position:relative;}
-  .tag{display:inline-block;background:#f0f7ff;color:#0366d6;padding:4px 8px;border-radius:999px;font-weight:700;margin-right:8px;font-size:0.82rem;}
-  .time{display:inline-block;background:#f7f7f7;color:#444;padding:4px 8px;border-radius:999px;font-size:0.82rem;margin-right:8px;}
-  .title{font-weight:800;margin-top:8px;}
-  .tools{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap;}
-  .fav{position:absolute;right:10px;top:10px;border-radius:6px;padding:6px;background:#fff;border:1px solid #eee;cursor:pointer;}
-  .fav.active{background:var(--accent-2);color:white;border-color:transparent;}
-  .pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:12px;}
-  .small{font-size:0.85rem;color:var(--muted);}
-  textarea#staticOut{width:100%;height:220px;margin-top:10px;padding:10px;border-radius:8px;border:1px solid #ccc;font-family:monospace;white-space:pre-wrap;overflow:auto;}
-  .top-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
-  .left-col{flex:1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .right-col{display:flex;align-items:center;gap:8px;}
-  footer{margin:28px 0 60px;color:var(--muted);font-size:0.9rem;text-align:center;}
-  @media(max-width:720px){ .grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));} .meta{margin-left:0;}}
+  button{background:#2962ff;color:#fff;border:none;cursor:pointer;font-weight:700;}
+  .meta{margin-left:auto;color:#666;font-size:0.95rem;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;}
+  .card{background:#fff;padding:12px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+  .badge{display:inline-block;padding:5px 8px;border-radius:999px;font-weight:700;font-size:0.82rem;margin-right:8px;}
+  .badge.genre{background:#f0f7ff;color:#0366d6;}
+  .badge.time{background:#f7f7f7;color:#444;}
+  .title{font-weight:800;margin-top:8px;line-height:1.4;}
 </style>
 </head>
 <body>
-<header>
-  📚 自学ネタ
-</header>
+<header>自学ネタ</header>
 
 <div class="container">
-  <div class="controls top-row">
-    <div class="left-col">
-      <label for="genreFilter">ジャンル</label>
-      <select id="genreFilter"><option value="all">すべて</option></select>
-
-      <label for="timeFilter">所要時間</label>
-      <select id="timeFilter"><option value="all">すべて</option></select>
-
-      <label for="searchBox">キーワード</label>
-      <input id="searchBox" placeholder="例: 星 / 実験 / 英語" style="min-width:200px"/>
-
-      <label for="perPage">表示数</label>
-      <select id="perPage">
-        <option value="12">12</option>
-        <option value="24" selected>24</option>
-        <option value="48">48</option>
-        <option value="96">96</option>
-      </select>
-    </div>
-
-    <div class="right-col">
-      <div class="meta">表示：<span id="shownCount">0</span> / <span id="totalCount">0</span></div>
-    </div>
+  <div class="controls">
+    <label>ジャンル：</label>
+    <select id="genre"><option value="all">すべて</option></select>
+    <label>時間：</label>
+    <select id="time"><option value="all">すべて</option></select>
+    <label>検索：</label>
+    <input id="search" placeholder="キーワード...">
+    <button id="clear">クリア</button>
+    <div class="meta">表示：<span id="count">0</span>件</div>
   </div>
 
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-    <button id="shuffleBtn" type="button">🔀 シャッフル</button>
-    <button id="showFavBtn" type="button">★ お気に入りのみ</button>
-    <button id="exportBtn" type="button">📄 表示中を &lt;li&gt; 出力</button>
-    <button id="downloadBtn" type="button">⬇ ダウンロード（表示中）</button>
-    <button id="copyBtn" type="button">📋 クリップボードにコピー</button>
-    <div class="small">（/で検索にフォーカス）</div>
-  </div>
+  <div class="grid" id="grid"></div>
+</div>
 
-  <div class="list-wrap">
-    <div class="grid" id="ideasGrid" aria-live="polite"></div>
+<!-- データファイル読み込み -->
+<script src="data1.js"></script>
+<script src="data2.js"></script>
+<script src="data3.js"></script>
+<script src="data4.js"></script>
+<script src="data5.js"></script>
 
-    <div class="pager" id="pager">
-      <button id="prevBtn" type="button">◀ 前へ</button>
-      <div class="small">ページ <span id="curPage">1</span> / <span id="pageCount">1</span></div>
-      <button id="nextBtn" type="button">次へ ▶</button>
-    </div>
-
-    <div style="margin-top:12px;">
-      <textarea id="staticOut" placeholder="『表示中の項目を &lt;li&gt; 形式でここに出力』"></textarea>
-    </div>
-  </div>
-
-  
 <script>
-/* -------------------------
-   データ＆生成ロジック
-   ------------------------- */
-const GENRES = ["理科","社会","国語","算数","英語","生活","図工","音楽","プログラミング","雑学"];
-const TIMES = ["約5分","約10分","約15分","約20分","約30分"];
-const SUBJECTS = [
-  "身近な〇〇を観察して記録する",
-  "簡単な実験で〇〇の仕組みを確かめる",
-  "〇〇の歴史を調べて年表にする",
-  "〇〇の写真を集めて特徴をまとめる",
-  "〇〇の作り方を調べて実際に作ってみる",
-  "〇〇の言葉を10個覚えて例文を作る",
-  "〇〇のデータを集めてグラフにする",
-  "〇〇についてのミニプレゼンを作る",
-  "〇〇の違いを比較して表にまとめる",
-  "〇〇の読み物を読んで要約を書く",
-  "〇〇をテーマに短い物語を書く",
-  "〇〇の図解を作る",
-  "〇〇の実物を観察してスケッチする",
-  "〇〇の実験手順と結果をレポートにする",
-  "〇〇の英語表現をまとめて会話例を作る",
-  "〇〇に関するクイズを10問作る",
-  "〇〇についてインタビューして記事にする",
-  "〇〇の種類を5つ調べる",
-  "〇〇を5分で説明する練習をする",
-  "〇〇の工作をして工程を写真で残す"
-];
-const SUBJECT_FILL = {
-  "理科": ["植物の葉","水の状態変化","月の観察","音の伝わり方","磁石の性質","電気の流れ"],
-  "社会": ["県の名産","歴史上の出来事","世界の祝日","有名な遺跡","地域の産業"],
-  "国語": ["好きな本の一節","ことわざ","漢字の成り立ち","詩の分析"],
-  "算数": ["図形の面積","割合の問題","時計の計算","速さの問題"],
-  "英語": ["自己紹介フレーズ","天気の表現","動物の名前","簡単な会話"],
-  "生活": ["節水のコツ","簡単レシピ","防災チェック","家の電力チェック"],
-  "図工": ["折り紙作品","コラージュ","スケッチ","模型作り"],
-  "音楽": ["リズム練習","楽器の歴史","簡単な旋律作り"],
-  "プログラミング": ["HTML自己紹介ページ","簡単な計算プログラム","ランダム詩生成"],
-  "雑学": ["世界の不思議な事実","食品のトリビア","記念日の由来"]
-};
-const EXTRA = [
-  "結果を写真や図で記録しよう。",
-  "1分で要点をまとめられるようにしてみよう。",
-  "家の人に発表してフィードバックをもらおう。",
-  "3つのポイントに分けてノートにまとめよう。",
-  "表やグラフを必ず1つ作ることを目標にしよう。",
-  "安全に気をつけて実験を行おう。",
-  "英語でも短い説明を書いてみよう。",
-  "時間内（目安）に終わるように工夫してみよう。",
-  "地域の情報を調べて地域色を入れよう。",
-  "実際に作ったものを写真に残しておこう。"
-];
-
-const N = 1000;
-const items = [];
-for(let i=0;i<N;i++){
-  const genre = GENRES[i % GENRES.length];
-  const tmpl = SUBJECTS[i % SUBJECTS.length];
-  const fills = SUBJECT_FILL[genre] || ["テーマ"];
-  const fill = fills[(Math.floor(i/GENRES.length) + i) % fills.length];
-  const extra = EXTRA[(i*7) % EXTRA.length];
-  const base = tmpl.replace("〇〇", fill);
-  const variant = (i % 5) === 0 ? "" : `（発展：${i%5}）`;
-  const text = `${base}${variant} — ${extra}`;
-  const time = timeForGenre(genre, i);
-  items.push({id:i+1,text,genre,time});
-}
-
-function timeForGenre(g, idx){
-  const base = idx % TIMES.length;
-  if(g==="プログラミング" || g==="図工") return TIMES[(base+2)%TIMES.length];
-  if(g==="雑学" || g==="英語") return TIMES[(base)%TIMES.length];
-  return TIMES[(base+1)%TIMES.length];
-}
-
-/* -------------------------
-   DOM & state
-   ------------------------- */
-const genreFilter = document.getElementById('genreFilter');
-const timeFilter = document.getElementById('timeFilter');
-const searchBox = document.getElementById('searchBox');
-const perPageEl = document.getElementById('perPage');
-const ideasGrid = document.getElementById('ideasGrid');
-const shownCountEl = document.getElementById('shownCount');
-const totalCountEl = document.getElementById('totalCount');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const curPageEl = document.getElementById('curPage');
-const pageCountEl = document.getElementById('pageCount');
-const staticOut = document.getElementById('staticOut');
-
-let state = {
-  page: 1,
-  perPage: parseInt(perPageEl.value,10),
-  showFavOnly: false,
-  filters:{genre:'all', time:'all', kw:''},
-  favs: new Set(JSON.parse(localStorage.getItem('study_favs')||'[]'))
-};
-
-/* init select options */
-GENRES.forEach(g=>{
-  const o=document.createElement('option'); o.value=g; o.textContent=g; genreFilter.appendChild(o);
-});
-TIMES.forEach(t=>{
-  const o=document.createElement('option'); o.value=t; o.textContent=t; timeFilter.appendChild(o);
-});
-totalCountEl.textContent = items.length;
-
-/* -------------------------
-   render & filter
-   ------------------------- */
-function matchesFilters(it, filters){
-  if(filters.genre !== 'all' && it.genre !== filters.genre) return false;
-  if(filters.time !== 'all' && it.time !== filters.time) return false;
-  if(filters.kw){
-    const kw = filters.kw.toLowerCase();
-    if(!(it.text.toLowerCase().includes(kw) || it.genre.toLowerCase().includes(kw))) return false;
-  }
-  if(state.showFavOnly && !state.favs.has(it.id)) return false;
-  return true;
-}
-
-function getFiltered(){
-  const f = state.filters;
-  return items.filter(it=>matchesFilters(it,f));
-}
-
-function render(){
-  const filtered = getFiltered();
-  const total = filtered.length;
-  const per = state.perPage;
-  const pageCount = Math.max(1, Math.ceil(total / per));
-  if(state.page > pageCount) state.page = pageCount;
-  const start = (state.page-1)*per;
-  const pageItems = filtered.slice(start, start+per);
-
-  ideasGrid.innerHTML = '';
-  pageItems.forEach(it=>{
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `
-      <button class="fav ${state.favs.has(it.id)?'active':''}" data-id="${it.id}" title="お気に入り登録">★</button>
-      <div><span class="tag">${it.genre}</span><span class="time">${it.time}</span></div>
-      <div class="title">${escapeHtml(it.text)}</div>
-      <div class="tools small">${escapeHtml(shortHint(it.text))}</div>
-    `;
-    ideasGrid.appendChild(div);
+const genreSel=document.getElementById("genre");
+const timeSel=document.getElementById("time");
+const search=document.getElementById("search");
+const clearBtn=document.getElementById("clear");
+const grid=document.getElementById("grid");
+const count=document.getElementById("count");
+const GENRES=["理科","社会","国語","算数","英語","生活","図工","音楽","プログラミング","雑学"];
+const TIMES=["約5分","約10分","約15分","約20分","約30分"];
+GENRES.forEach(g=>{const o=document.createElement("option");o.value=g;o.textContent=g;genreSel.appendChild(o)});
+TIMES.forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;timeSel.appendChild(o)});
+let ALL_ITEMS=[];
+function updateDisplay(){
+  const g=genreSel.value,t=timeSel.value,q=(search.value||"").toLowerCase();
+  const f=ALL_ITEMS.filter(it=>{
+    if(g!=="all"&&it.genre!==g)return false;
+    if(t!=="all"&&it.time!==t)return false;
+    if(q&&!(it.text.toLowerCase().includes(q)))return false;
+    return true;
   });
-
-  shownCountEl.textContent = total;
-  curPageEl.textContent = state.page;
-  pageCountEl.textContent = pageCount;
-  // disable/enable pager
-  prevBtn.disabled = state.page <= 1;
-  nextBtn.disabled = state.page >= pageCount;
+  grid.innerHTML="";
+  f.forEach(it=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`<span class="badge genre">${it.genre}</span><span class="badge time">${it.time}</span><div class="title">${it.text}</div>`;
+    grid.appendChild(d);
+  });
+  count.textContent=f.length;
 }
-
-/* helpers */
-function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-function shortHint(s){ return s.length>60? s.slice(0,60)+'...': s; }
-
-/* -------------------------
-   events
-   ------------------------- */
-function updateAndRender(resetPage=true){
-  if(resetPage) state.page = 1;
-  state.perPage = parseInt(perPageEl.value,10);
-  state.filters.genre = genreFilter.value;
-  state.filters.time = timeFilter.value;
-  state.filters.kw = (searchBox.value||'').trim();
-  render();
-}
-
-// search debounce
-let debounceTimer = null;
-searchBox.addEventListener('input', ()=>{
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(()=> updateAndRender(true), 220);
+genreSel.onchange=timeSel.onchange=search.oninput=updateDisplay;
+clearBtn.onclick=()=>{genreSel.value="all";timeSel.value="all";search.value="";updateDisplay();}
+window.addEventListener("DOMContentLoaded",()=>{
+  ALL_ITEMS=[...(window.data1||[]),(window.data2||[]),(window.data3||[]),(window.data4||[]),(window.data5||[])].flat();
+  updateDisplay();
 });
-genreFilter.addEventListener('change', ()=> updateAndRender(true));
-timeFilter.addEventListener('change', ()=> updateAndRender(true));
-perPageEl.addEventListener('change', ()=> updateAndRender(false));
-
-prevBtn.addEventListener('click', ()=> { if(state.page>1){ state.page--; render(); }});
-nextBtn.addEventListener('click', ()=> { state.page++; render(); });
-
-// focus shortcut '/'
-document.addEventListener('keydown',(e)=>{
-  if(e.key === '/') { e.preventDefault(); searchBox.focus(); }
-});
-
-// shuffle
-document.getElementById('shuffleBtn').addEventListener('click', ()=>{
-  // randomize items array in-place then reset
-  for(let i=items.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [items[i], items[j]] = [items[j], items[i]];
-  }
-  updateAndRender(true);
-});
-
-// show favorites toggle
-document.getElementById('showFavBtn').addEventListener('click', ()=>{
-  state.showFavOnly = !state.showFavOnly;
-  document.getElementById('showFavBtn').textContent = state.showFavOnly ? '★ お気に入りのみ（ON）' : '★ お気に入りのみ';
-  updateAndRender(true);
-});
-
-// delegate favorite clicks
-ideasGrid.addEventListener('click', (e)=>{
-  const btn = e.target.closest('.fav');
-  if(!btn) return;
-  const id = Number(btn.dataset.id);
-  if(state.favs.has(id)){ state.favs.delete(id); btn.classList.remove('active'); }
-  else { state.favs.add(id); btn.classList.add('active'); }
-  // persist
-  localStorage.setItem('study_favs', JSON.stringify(Array.from(state.favs)));
-});
-
-// export visible -> static <li>
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const filtered = getFiltered();
-  const lines = filtered.map(it=>`<li data-genre="${it.genre}" data-time="${it.time}">${it.text}</li>`);
-  staticOut.value = lines.join("\n");
-  // select for easy copy
-  staticOut.focus(); staticOut.select();
-});
-
-// download visible
-document.getElementById('downloadBtn').addEventListener('click', ()=>{
-  const filtered = getFiltered();
-  const lines = filtered.map(it=>`<li data-genre="${it.genre}" data-time="${it.time}">${it.text}</li>`);
-  const blob = new Blob([lines.join("\n")], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'study_visible_li.txt'; document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-});
-
-// copy to clipboard
-document.getElementById('copyBtn').addEventListener('click', async ()=>{
-  const text = staticOut.value || (getFiltered().map(it=>`<li data-genre="${it.genre}" data-time="${it.time}">${it.text}</li>`).join("\n"));
-  try{
-    await navigator.clipboard.writeText(text);
-    alert('クリップボードにコピーしました！');
-  } catch(e){
-    alert('コピーに失敗しました。テキストを選択して手動でコピーしてください。');
-  }
-});
-
-// clear
-document.getElementById('clearBtn').addEventListener('click', ()=>{
-  genreFilter.value = 'all'; timeFilter.value='all'; searchBox.value=''; state.showFavOnly=false;
-  document.getElementById('showFavBtn').textContent = '★ お気に入りのみ';
-  updateAndRender(true);
-});
-
-/* mark fav buttons after render by re-binding (since card elements are recreated) */
-const observer = new MutationObserver(()=>{ // ensure favorite buttons reflect storage
-  // attach titles & toggle states (initial render sets correct class)
-});
-observer.observe(ideasGrid, {childList:true, subtree:true});
-
-/* init render */
-updateAndRender(true);
-
-/* expose for debugging (optional) */
-window.__study = {items, state, updateAndRender, getFiltered};
-
 </script>
 </body>
 </html>
-
