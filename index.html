@@ -5,14 +5,77 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>自学ネタ</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
-  h1 { text-align: center; }
-  .filter { margin-bottom: 20px; text-align: center; }
-  select, input { margin: 0 5px; padding: 5px; }
-  .ne-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-  .ne-item { background: #fff; padding: 10px; border-radius: 5px; width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-  .genre { font-weight: bold; }
-  .time { color: #555; font-size: 0.9em; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 2.2em;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  select, input {
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+  }
+
+  .ne-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    width: 90%;
+    max-width: 1200px;
+    margin-bottom: 50px;
+  }
+
+  .ne-item {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .ne-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+  }
+
+  .genre {
+    font-weight: bold;
+    color: #ff6f61;
+    margin-bottom: 5px;
+  }
+
+  .time {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .text {
+    font-size: 1em;
+    line-height: 1.4;
+  }
 </style>
 </head>
 <body>
@@ -38,8 +101,8 @@
     <option value="約20分">約20分</option>
   </select>
 
-  <label for="searchInput">キーワード:</label>
-  <input type="text" id="searchInput" placeholder="検索ワード">
+  <label for="searchInput">検索:</label>
+  <input type="text" id="searchInput" placeholder="キーワードで検索">
 </div>
 
 <div class="ne-list" id="neList"></div>
@@ -58,15 +121,12 @@
 <script src="data12.js"></script>
 <script src="data13.js"></script>
 <script src="data14.js"></script>
-<script src="data15.js"></script>
-<script src="data16.js"></script>
 
 <script>
 const allData = [].concat(
   window.data1, window.data2, window.data3, window.data4, window.data5,
   window.data6, window.data7, window.data8, window.data9, window.data10,
-  window.data11, window.data12, window.data13, window.data14,
-  window.data15, window.data16
+  window.data11, window.data12, window.data13, window.data14
 );
 
 const neList = document.getElementById('neList');
@@ -100,7 +160,7 @@ function renderList() {
 // 初期表示
 renderList();
 
-// イベントリスナー
+// イベント
 genreFilter.addEventListener('change', renderList);
 timeFilter.addEventListener('change', renderList);
 searchInput.addEventListener('input', renderList);
