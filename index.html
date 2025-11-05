@@ -2,102 +2,109 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>自学ネタ</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
+  body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
   h1 { text-align: center; }
-  #filters { margin-bottom: 20px; }
-  select, input { margin-right: 10px; }
-  .task { border: 1px solid #ccc; padding: 10px; margin-bottom: 5px; }
-  .task span { font-weight: bold; }
+  .filter { margin-bottom: 20px; text-align: center; }
+  select, input { margin: 0 5px; padding: 5px; }
+  .ne-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .ne-item { background: #fff; padding: 10px; border-radius: 5px; width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+  .genre { font-weight: bold; }
+  .time { color: #555; font-size: 0.9em; }
 </style>
 </head>
 <body>
+
 <h1>自学ネタ</h1>
 
-<div id="filters">
-  ジャンル:
+<div class="filter">
+  <label for="genreFilter">ジャンル:</label>
   <select id="genreFilter">
     <option value="">すべて</option>
     <option value="理科">理科</option>
     <option value="社会">社会</option>
-    <option value="国語">国語</option>
-    <option value="算数">算数</option>
-    <option value="英語">英語</option>
-    <option value="生活">生活</option>
-    <option value="図工">図工</option>
-    <option value="音楽">音楽</option>
+    <option value="スポーツ">スポーツ</option>
     <option value="プログラミング">プログラミング</option>
-    <option value="雑学">雑学</option>
+    <option value="アート">アート</option>
   </select>
 
-  所要時間:
+  <label for="timeFilter">所要時間:</label>
   <select id="timeFilter">
     <option value="">すべて</option>
-    <option value="約5分">約5分</option>
     <option value="約10分">約10分</option>
     <option value="約15分">約15分</option>
     <option value="約20分">約20分</option>
-    <option value="約30分">約30分</option>
   </select>
 
-  キーワード検索:
-  <input type="text" id="searchInput" placeholder="例: 観察">
-
-  <button onclick="applyFilters()">絞り込む</button>
-  <button onclick="resetFilters()">リセット</button>
+  <label for="searchInput">キーワード:</label>
+  <input type="text" id="searchInput" placeholder="検索ワード">
 </div>
 
-<div id="taskList"></div>
+<div class="ne-list" id="neList"></div>
 
 <script src="data1.js"></script>
 <script src="data2.js"></script>
 <script src="data3.js"></script>
 <script src="data4.js"></script>
 <script src="data5.js"></script>
+<script src="data6.js"></script>
+<script src="data7.js"></script>
+<script src="data8.js"></script>
+<script src="data9.js"></script>
+<script src="data10.js"></script>
+<script src="data11.js"></script>
+<script src="data12.js"></script>
+<script src="data13.js"></script>
+<script src="data14.js"></script>
+<script src="data15.js"></script>
+<script src="data16.js"></script>
+
 <script>
-  // すべてのデータをまとめる
-  const allTasks = [...window.data1, ...window.data2, ...window.data3, ...window.data4, ...window.data5];
+const allData = [].concat(
+  window.data1, window.data2, window.data3, window.data4, window.data5,
+  window.data6, window.data7, window.data8, window.data9, window.data10,
+  window.data11, window.data12, window.data13, window.data14,
+  window.data15, window.data16
+);
 
-  function displayTasks(tasks) {
-    const container = document.getElementById('taskList');
-    container.innerHTML = '';
-    if(tasks.length === 0) {
-      container.innerHTML = '<p>該当する自学ネタはありません。</p>';
-      return;
-    }
-    tasks.forEach(task => {
-      const div = document.createElement('div');
-      div.className = 'task';
-      div.innerHTML = `<span>ジャンル:</span> ${task.genre} | <span>所要時間:</span> ${task.time}<br>${task.text}`;
-      container.appendChild(div);
-    });
-  }
+const neList = document.getElementById('neList');
+const genreFilter = document.getElementById('genreFilter');
+const timeFilter = document.getElementById('timeFilter');
+const searchInput = document.getElementById('searchInput');
 
-  function applyFilters() {
-    const genre = document.getElementById('genreFilter').value;
-    const time = document.getElementById('timeFilter').value;
-    const keyword = document.getElementById('searchInput').value.trim();
+function renderList() {
+  const genre = genreFilter.value;
+  const time = timeFilter.value;
+  const keyword = searchInput.value.toLowerCase();
 
-    const filtered = allTasks.filter(task => {
-      const genreMatch = genre ? task.genre === genre : true;
-      const timeMatch = time ? task.time === time : true;
-      const keywordMatch = keyword ? task.text.includes(keyword) : true;
-      return genreMatch && timeMatch && keywordMatch;
-    });
+  neList.innerHTML = '';
 
-    displayTasks(filtered);
-  }
+  const filtered = allData.filter(item => {
+    return (!genre || item.genre === genre)
+      && (!time || item.time === time)
+      && (!keyword || item.text.toLowerCase().includes(keyword));
+  });
 
-  function resetFilters() {
-    document.getElementById('genreFilter').value = '';
-    document.getElementById('timeFilter').value = '';
-    document.getElementById('searchInput').value = '';
-    displayTasks(allTasks);
-  }
+  filtered.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'ne-item';
+    div.innerHTML = `<div class="genre">${item.genre}</div>
+                     <div class="time">${item.time}</div>
+                     <div class="text">${item.text}</div>`;
+    neList.appendChild(div);
+  });
+}
 
-  // 最初は全件表示
-  displayTasks(allTasks);
+// 初期表示
+renderList();
+
+// イベントリスナー
+genreFilter.addEventListener('change', renderList);
+timeFilter.addEventListener('change', renderList);
+searchInput.addEventListener('input', renderList);
 </script>
+
 </body>
 </html>
