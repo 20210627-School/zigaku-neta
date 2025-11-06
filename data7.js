@@ -1,6 +1,5 @@
 // data7.js — 自学ネタ追加 100件（社会ジャンル）
-window.data6 = window.data6 || [];
-window.data6 = window.data6.concat([
+window.data6 = [
   {genre:"社会", time:"約10分", text:"地元の有名な史跡を調べてまとめよう。"},
   {genre:"社会", time:"約15分", text:"日本の都道府県を地図で覚える練習をしよう。"},
   {genre:"社会", time:"約20分", text:"江戸時代と現代の生活の違いを比較して記録しよう。"},
@@ -87,4 +86,4 @@ window.data6 = window.data6.concat([
   {genre:"社会", time:"約10分", text:"地域の名所や観光地の歴史を調べよう。"},
   {genre:"社会", time:"約15分", text:"日本の歴史上の偉人の功績を調べてまとめよう。"},
   {genre:"社会", time:"約20分", text:"世界の国や都市の特徴を3つ比較してまとめよう。"}
-]);
+];
