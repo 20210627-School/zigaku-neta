@@ -66,19 +66,19 @@
   .text { font-size: 1em; line-height: 1.4; }
 
   /* ジャンルごとに色分け */
-.算数 { background: #41a3f2; }
-.国語 { background: #f76d60; }
-.理科 { background: #6afc49; }
-.社会 { background: #fae843; color:#333; }
-.図工 { background: #fab143; }
-.音楽 { background: #f7b0dc; }
-.英語 { background: #d2b0f7; }
-.工作 { background: #b0f7c5; }
-.生活 { background: #e09f36; }
-.雑学 { background: #4d36e0; }
-.スポーツ { background: #3F51B5; }
-.プログラミング { background: #673AB7; }
-.アート { background: #E91E63; }
+  .算数 { background: #41a3f2; }
+  .国語 { background: #f76d60; }
+  .理科 { background: #6afc49; }
+  .社会 { background: #fae843; color:#333; }
+  .図工 { background: #fab143; }
+  .音楽 { background: #f7b0dc; }
+  .英語 { background: #d2b0f7; }
+  .工作 { background: #b0f7c5; }
+  .生活 { background: #e09f36; }
+  .雑学 { background: #4d36e0; }
+  .スポーツ { background: #3F51B5; }
+  .プログラミング { background: #673AB7; }
+  .アート { background: #E91E63; }
 </style>
 </head>
 <body>
@@ -88,7 +88,7 @@
 <div class="filter">
   <label for="genreFilter">ジャンル:</label>
   <select id="genreFilter">
-     <option value="">すべて</option>
+    <option value="">すべて</option>
     <option value="算数">算数</option>
     <option value="国語">国語</option>
     <option value="理科">理科</option>
@@ -120,6 +120,7 @@
 
 <div class="ne-list" id="neList"></div>
 
+<!-- JS読み込み -->
 <script src="data1.js"></script>
 <script src="data2.js"></script>
 <script src="data3.js"></script>
@@ -134,16 +135,15 @@
 <script src="data12.js"></script>
 <script src="data13.js"></script>
 <script src="data14.js"></script>
-<script src="data14.js"></script>
 <script src="data15.js"></script>
 <script src="data16.js"></script>
 
 <script>
 const allData = [].concat(
-  window.data1, window.data2, window.data3, window.data4, window.data5,
-  window.data6, window.data7, window.data8, window.data9, window.data10,
-  window.data11, window.data12, window.data13, window.data14, window.data15,
-  window.date16
+  window.data1 || [], window.data2 || [], window.data3 || [], window.data4 || [], window.data5 || [],
+  window.data6 || [], window.data7 || [], window.data8 || [], window.data9 || [], window.data10 || [],
+  window.data11 || [], window.data12 || [], window.data13 || [], window.data14 || [], window.data15 || [],
+  window.data16 || []
 );
 
 const neList = document.getElementById('neList');
@@ -158,18 +158,19 @@ function renderList() {
 
   neList.innerHTML = '';
 
-  const filtered = allData.filter(item => {
-    return (!genre || item.genre === genre)
-      && (!time || item.time === time)
-      && (!keyword || item.text.toLowerCase().includes(keyword));
-  });
+  const filtered = allData.filter(item =>
+    (!genre || item.genre === genre) &&
+    (!time || item.time === time) &&
+    (!keyword || item.text.toLowerCase().includes(keyword))
+  );
 
   filtered.forEach(item => {
     const div = document.createElement('div');
     div.className = `ne-item ${item.genre}`;
-    div.innerHTML = `<div class="genre">${item.genre}</div>
-                     <div class="time">${item.time}</div>
-                     <div class="text">${item.text}</div>`;
+    div.innerHTML = `
+      <div class="genre">${item.genre}</div>
+      <div class="time">${item.time}</div>
+      <div class="text">${item.text}</div>`;
     neList.appendChild(div);
   });
 }
@@ -177,7 +178,7 @@ function renderList() {
 // 初期表示
 renderList();
 
-// イベント
+// イベント設定
 genreFilter.addEventListener('change', renderList);
 timeFilter.addEventListener('change', renderList);
 searchInput.addEventListener('input', renderList);
